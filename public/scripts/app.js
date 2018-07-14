@@ -22,6 +22,7 @@ var IndecisionApp = function (_React$Component) {
         _this.handleDeleteOptions = _this.handleDeleteOptions.bind(_this);
         _this.handleAddOption = _this.handleAddOption.bind(_this);
         _this.handlePick = _this.handlePick.bind(_this);
+        _this.handleDeleteOption = _this.handleDeleteOption.bind(_this);
         return _this;
     }
 
@@ -30,6 +31,43 @@ var IndecisionApp = function (_React$Component) {
         value: function handleDeleteOptions() {
             this.setState(function () {
                 return { options: [] };
+            });
+        }
+        /*Life cycle methods begin*/
+
+    }, {
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            try {
+                var options = JSON.parse(localStorage.getItem('options'));
+                if (options) {
+                    this.setState(function () {
+                        return { options: options };
+                    });
+                }
+            } catch (e) {
+                //Do nothing
+            }
+        }
+    }, {
+        key: 'componentDidUpdate',
+        value: function componentDidUpdate(prevProps, prevState) {
+            if (prevState.options.length != this.state.options.length) {
+                var options = JSON.stringify(this.state.options);
+                localStorage.setItem('options', options);
+            }
+        }
+        /*Life cycle methods end*/
+
+    }, {
+        key: 'handleDeleteOption',
+        value: function handleDeleteOption(option) {
+            this.setState(function (prevState) {
+                return {
+                    options: prevState.options.filter(function (i) {
+                        return option != i;
+                    })
+                };
             });
         }
     }, {
@@ -66,7 +104,8 @@ var IndecisionApp = function (_React$Component) {
                 }),
                 React.createElement(Options, {
                     options: this.state.options,
-                    handleDeleteOptions: this.handleDeleteOptions
+                    handleDeleteOptions: this.handleDeleteOptions,
+                    handleDeleteOption: this.handleDeleteOption
                 }),
                 React.createElement(AddOptions, { handleAddOption: this.handleAddOption })
             );
@@ -121,7 +160,11 @@ var Options = function Options(props) {
             { onClick: props.handleDeleteOptions },
             'Remove All'
         ),
-        React.createElement(
+        props.options.length === 0 ? React.createElement(
+            'p',
+            null,
+            'Please add an option to get started.'
+        ) : React.createElement(
             'p',
             null,
             'Here are your options:'
@@ -130,7 +173,11 @@ var Options = function Options(props) {
             'ol',
             null,
             props.options.map(function (option) {
-                return React.createElement(Option, { key: option, optionText: option });
+                return React.createElement(Option, {
+                    key: option,
+                    optionText: option,
+                    handleDeleteOption: props.handleDeleteOption
+                });
             })
         )
     );
@@ -138,9 +185,16 @@ var Options = function Options(props) {
 
 var Option = function Option(props) {
     return React.createElement(
-        'li',
-        { key: props.optionText },
-        props.optionText
+        'div',
+        null,
+        props.optionText,
+        React.createElement(
+            'button',
+            { onClick: function onClick(e) {
+                    props.handleDeleteOption(props.optionText);
+                } },
+            'Remove'
+        )
     );
 };
 
@@ -169,6 +223,11 @@ var AddOptions = function (_React$Component2) {
                 this.setState(function () {
                     return { error: error };
                 });
+            } else {
+                this.setState(function () {
+                    return { error: undefined };
+                });
+                e.target.elements.option.value = '';
             }
         }
     }, {

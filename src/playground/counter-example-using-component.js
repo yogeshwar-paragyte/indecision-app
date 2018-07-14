@@ -8,14 +8,29 @@ class Counter extends React.Component{
             count: this.props.count   
         }
     }
+    componentDidUpdate(prevProp, prevState)
+    {
+        if (prevState.count !== this.state.count)
+        {            
+             localStorage.setItem('count',this.state.count);
+        }
+    }
+    componentDidMount()
+    {
+        const count = parseInt(localStorage.getItem('count'), 10);
+        if(!isNaN(count))
+        {
+            this.setState(() => ({count}));
+        }        
+    }
     addOne(){
-        this.setState((prevState) => prevState.count++)
+        this.setState((prevState) => ({count: prevState.count + 1}))
     }
     minusOne(){
-        this.setState((prevState) => prevState.count--);
+        this.setState((prevState) => ({count: prevState.count - 1}));
     }
     reset(){
-        this.setState(() => { return {count : 0}});
+        this.setState(() => ({count : 0}));
         //older versions used to accept objects e.g.
         //this.setState({count : 0});
     }
