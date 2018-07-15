@@ -5,17 +5,11 @@ import Options from './Options';
 import Action from './Action';
 
 export default class IndecisionApp extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            options: []
-        }
-        this.handleDeleteOptions = this.handleDeleteOptions.bind(this);
-        this.handleAddOption = this.handleAddOption.bind(this);
-        this.handlePick = this.handlePick.bind(this);
-        this.handleDeleteOption = this.handleDeleteOption.bind(this)
+    state = {
+        options: []
     }
-    handleDeleteOptions(){
+    
+    handleDeleteOptions = () => {
         this.setState(() => ({options:[]}))
     }
     /*Life cycle methods begin*/
@@ -44,8 +38,7 @@ export default class IndecisionApp extends React.Component{
         }        
     }
     /*Life cycle methods end*/
-    handleDeleteOption(option)
-    {        
+    handleDeleteOption = (option) => {        
         this.setState((prevState) => 
         {
             return{
@@ -56,7 +49,7 @@ export default class IndecisionApp extends React.Component{
         })
     }
 
-    handleAddOption(option){        
+    handleAddOption = (option) => {        
         if(!option)
         {
             return 'Enter a valid value to add item.';
@@ -69,7 +62,7 @@ export default class IndecisionApp extends React.Component{
                 options: prevState.options.concat(option) // not using push bcoz it modifies the orignal array
            }))
     }
-    handlePick(){
+    handlePick = () => {
         const randomNum = Math.floor(Math.random() * this.state.options.length);
         console.log(this.state.options[randomNum]);
     }
