@@ -1,7 +1,5 @@
-import isSenior,{isAdult, canDrink} from './person';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import IndecisionApp from './components/IndecisionApp';
 
-console.log('App.js is running!!')
-
-console.log('Is adult : '+ isAdult(17));
-console.log('Can drink : '+ canDrink(21));
-console.log('Is senior : '+ isSenior(59));
+ReactDOM.render(<IndecisionApp />, document.getElementById('app')) 
